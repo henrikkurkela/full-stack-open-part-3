@@ -1,2 +1,2 @@
-# full-stack-open-part-3
-Full Stack open 2020 - Part 3
+# Full Stack open 2020 - Part 3
+Part 3 of Helsinki University course Full Stack open 2020
