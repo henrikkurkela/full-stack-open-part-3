@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Lorem Ipsum",
+    "number": "010 1234 567"
+}
