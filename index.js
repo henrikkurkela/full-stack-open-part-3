@@ -1,8 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
+app.use(cors())
 
 morgan.token('data', (request, response) => {
     return JSON.stringify(request.body)
@@ -26,6 +28,18 @@ app.post('/api/persons', (request, response) => {
 
         persons = persons.concat(person)
         response.json(person)
+    }
+})
+
+app.put('/api/persons/:id', (request, response) => {
+    if (request.body.id === undefined || request.body.number === undefined) {
+        response.status(400).json({error: "Missing fields in request"})
+    } else if (persons.map(contact => contact.id).includes(Number(request.body.id))) {
+        let index = persons.findIndex(person => person.id === Number(request.body.id))
+        persons[index].number = request.body.number
+        response.json(persons[index])
+    } else {
+        response.status(400).json({error: "Person does not exist in phonebook"})
     }
 })
 
@@ -78,7 +92,7 @@ let persons = [
         }
     ]
 
-const port = 3001
+const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
 })
