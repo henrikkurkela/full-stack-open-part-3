@@ -19,7 +19,7 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     if (request.body.name === undefined || request.body.number === undefined) {
         response.status(400).json({ error: "Missing fields in request" })
     } else {
@@ -29,9 +29,11 @@ app.post('/api/persons', (request, response) => {
             id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
         })
 
-        person.save().then(savedPerson => {
-            response.json(savedPerson.toJSON())
-        })
+        person.save()
+            .then(savedPerson => {
+                response.json(savedPerson.toJSON())
+            })
+            .catch(error => next(error))
     }
 })
 
@@ -89,6 +91,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).send({ error: 'validation error' })
     }
 
     next(error)
