@@ -9,7 +9,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :d
 app.use(cors())
 app.use(express.static('build'))
 
-morgan.token('data', (request, response) => {
+morgan.token('data', (request) => {
     return JSON.stringify(request.body)
 })
 
@@ -21,7 +21,7 @@ app.get('/api/persons', (request, response) => {
 
 app.post('/api/persons', (request, response, next) => {
     if (request.body.name === undefined || request.body.number === undefined) {
-        response.status(400).json({ error: "Missing fields in request" })
+        response.status(400).json({ error: 'Missing fields in request' })
     } else {
         const person = new Person({
             name: request.body.name,
@@ -39,7 +39,7 @@ app.post('/api/persons', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
     if (request.body.id === undefined || request.body.number === undefined) {
-        response.status(400).json({ error: "Missing fields in request" })
+        response.status(400).json({ error: 'Missing fields in request' })
     } else {
         const person = {
             number: request.body.number
@@ -76,7 +76,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.get('/info', (request, response, next) => {
     Person.countDocuments({})
         .then(count => {
-            let res = 
+            let res =
                 `<div>
                     <p>Phonebook has info for ${count} people</p>
                     <p>${Date()}</p>
